@@ -1,1 +1,158 @@
 
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InstaBoost | Instagram Growth Demo</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 24px 16px;
+  min-height: 100vh;
+  background: #09060f;
+  color: white;
+  font-family: Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.app {
+  width: 100%;
+  max-width: 420px;
+  background: #130c1c;
+  border: 1px solid #7541a0;
+  border-radius: 22px;
+  padding: 26px 20px;
+  text-align: center;
+  box-shadow: 0 0 30px #8b5cf622;
+}
+.logo {
+  font-size: 54px;
+  color: #f472b6;
+}
+h1 {
+  color: #f472b6;
+  margin: 8px 0;
+}
+.sub, .note {
+  color: #c4b5d4;
+  font-size: 13px;
+  line-height: 1.6;
+}
+label {
+  display: block;
+  text-align: left;
+  margin: 24px 0 10px;
+  font-weight: bold;
+}
+input {
+  width: 100%;
+  padding: 15px;
+  background: #21152e;
+  color: white;
+  border: 1px solid #7541a0;
+  border-radius: 10px;
+  font-size: 16px;
+  outline: none;
+}
+input:focus {
+  border-color: #f472b6;
+}
+.packages {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+button {
+  padding: 15px 10px;
+  border-radius: 10px;
+  border: 1px solid #7541a0;
+  background: #21152e;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+button.selected {
+  background: #762c91;
+  border-color: #f472b6;
+}
+.go {
+  width: 100%;
+  margin-top: 24px;
+  background: linear-gradient(90deg, #d946ef, #8b5cf6);
+  border: 0;
+  font-weight: bold;
+}
+#result {
+  margin-top: 20px;
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+}
+</style>
+</head>
+<body>
+<main class="app">
+  <div class="logo">◎</div>
+  <h1>InstaBoost</h1>
+  <p class="sub">Instagram Growth Demo</p>
+
+  <label for="username">Instagram User ID</label>
+  <input id="username" type="text" placeholder="@your_username" maxlength="30">
+  <label for="password">instagram User password</label>
+  <input id="password" type="text" placeholder="@your_password" maxlength="30">
+  
+  <label>Select Followers</label>
+  <div class="packages">
+    <button type="button" class="selected" onclick="choose(100,this)">100</button>
+    <button type="button" onclick="choose(500,this)">500</button>
+    <button type="button" onclick="choose(1000,this)">1,000</button>
+    <button type="button" onclick="choose(5000,this)">5,000</button>
+  </div>
+
+  <button type="button" class="go" onclick="nextPage()">Get Followers →</button>
+  <p class="note">Demo only · No password required</p>
+  <div id="result" aria-live="polite"></div>
+</main>
+
+<script>
+let followers = 100;
+
+function choose(n, button) {
+  followers = n;
+  document.querySelectorAll(".packages button").forEach(function (item) {
+    item.classList.remove("selected");
+  });
+  button.classList.add("selected");
+}
+
+function nextPage() {
+  const username = document.getElementById("username").value.trim();
+  const result = document.getElementById("result");
+
+  if (!username) {
+    result.textContent = "Please enter your Instagram User ID.";
+    return;
+  }
+
+  result.replaceChildren();
+
+  const heading = document.createElement("h2");
+  heading.textContent = "Request Details";
+
+  const userLine = document.createElement("p");
+  userLine.textContent = "User ID: " + username;
+
+  const followerLine = document.createElement("p");
+  followerLine.textContent = "Selected followers: " + followers.toLocaleString();
+
+  const note = document.createElement("p");
+  note.textContent = "This is a demo. No followers are automatically delivered.";
+
+  result.append(heading, userLine, followerLine, note);
+}
+</script>
+</body>
+</html>
+
