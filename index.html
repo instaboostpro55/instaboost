@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>InstaBoost | Instagram Growth Demo</title>
+<title>InstaBoost Pro | Instagram Growth Demo</title>
 <style>
 * { box-sizing: border-box; }
 body {
@@ -95,8 +95,8 @@ button.selected {
 <body>
 <main class="app">
   <div class="logo">◎</div>
-  <h1>InstaBoost</h1>
-  <p class="sub">Instagram Growth Demo</p>
+  <h1>InstaBoost Pro</h1>
+  <p class="sub">Instagram Growth</p>
 
   <label for="username">Instagram User ID</label>
   <input id="username" type="text" placeholder="@your_username" maxlength="30">
@@ -112,7 +112,6 @@ button.selected {
   </div>
 
   <button type="button" class="go" onclick="nextPage()">Get Followers →</button>
-  <p class="note">Demo only · No password required</p>
   <div id="result" aria-live="polite"></div>
 </main>
 
@@ -148,7 +147,7 @@ function nextPage() {
   followerLine.textContent = "Selected followers: " + followers.toLocaleString();
 
   const note = document.createElement("p");
-  note.textContent = "This is a demo. No followers are automatically delivered.";
+  note.textContent = "followers are automatically delivered.";
 
   result.append(heading, userLine, followerLine, note);
 }
