@@ -1,1 +1,93 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101426">
+  <title>InstaBoost Pro — Admin Login</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin:0; min-height:100vh; display:grid; place-items:center; padding:20px; background:#101426; color:#fff; font-family:Arial,Helvetica,sans-serif; }
+    .card { width:100%; max-width:390px; padding:28px; background:#202944; border:1px solid #34405f; border-radius:18px; box-shadow:0 18px 50px #0005; }
+    .logo { font-size:30px; margin-bottom:8px; }
+    h1 { margin:0 0 8px; font-size:25px; }
+    .sub { color:#c5cbe0; margin:0 0 22px; line-height:1.5; }
+    label { display:block; margin:14px 0 7px; font-size:14px; }
+    input,button { width:100%; border-radius:10px; padding:13px; font-size:16px; }
+    input { color:#fff; background:#111a30; border:1px solid #465272; }
+    button { margin-top:18px; border:0; background:#e1306c; color:#fff; font-weight:700; cursor:pointer; }
+    button:disabled { opacity:.65; cursor:wait; }
+    #message { overflow-wrap:anywhere; line-height:1.5; font-size:14px; }
+    .note { color:#b9c2dc; font-size:12px; line-height:1.5; margin-top:18px; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="logo">📊</div>
+    <h1>InstaBoost Pro</h1>
+    <p class="sub">Admin Login — केवल अधिकृत Admin के लिए</p>
+    <form id="loginForm">
+      <label for="email">Admin Email</label>
+      <input id="email" type="email" autocomplete="username" placeholder="अपना Admin email डालें" required>
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" placeholder="अपना password डालें" required>
+      <button id="loginButton" type="submit">Login</button>
+    </form>
+    <p id="message" role="status" aria-live="polite"></p>
+    <p class="note">अपना पासवर्ड किसी के साथ साझा न करें। Login Firebase Authentication से जाँचा जाता है। Dashboard और database की सुरक्षा के लिए Firestore Security Rules भी सही होना ज़रूरी है।</p>
+  </main>
 
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC3QQq60kr7xCcwQXRC-LdGg2CfBnlapxI",
+      authDomain: "instaboost-pro-da6ce.firebaseapp.com",
+      projectId: "instaboost-pro-da6ce",
+      storageBucket: "instaboost-pro-da6ce.firebasestorage.app",
+      messagingSenderId: "519613929080",
+      appId: "1:519613929080:web:928186291c1430ad11bf8d",
+      measurementId: "G-CSM3Y7QLE6"
+    };
+
+    // केवल इस UID को लॉगिन पेज पर Admin के रूप में अनुमति दी गई है।
+    // असली डेटा सुरक्षा Firestore Security Rules में भी लागू करनी होगी।
+    const ADMIN_UID = "k7xuJCcAK7ViPBwp1nPAlM5nXQ13";
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const message = document.getElementById("message");
+    const button = document.getElementById("loginButton");
+
+    document.getElementById("loginForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      button.disabled = true;
+      message.textContent = "Login जाँचा जा रहा है…";
+      try {
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const result = await signInWithEmailAndPassword(auth, email, password);
+        if (result.user.uid !== ADMIN_UID) {
+          await signOut(auth);
+          message.textContent = "यह अकाउंट Admin के लिए अधिकृत नहीं है।";
+          return;
+        }
+        message.textContent = "Admin login सफल। Dashboard खोल रहे हैं…";
+        window.location.href = "./dashboard.html";
+      } catch (error) {
+        const messages = {
+          "auth/invalid-credential": "ईमेल या पासवर्ड गलत है।",
+          "auth/user-not-found": "इस ईमेल का अकाउंट नहीं मिला।",
+          "auth/wrong-password": "पासवर्ड गलत है।",
+          "auth/too-many-requests": "बहुत बार प्रयास हुआ। कुछ देर बाद कोशिश करें।",
+          "auth/invalid-api-key": "Firebase Configuration में API key जाँचें।",
+          "auth/unauthorized-domain": "Firebase Authentication के Authorized domains में GitHub Pages domain जोड़ें।"
+        };
+        message.textContent = messages[error.code] || ("Login Error: " + error.message);
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
